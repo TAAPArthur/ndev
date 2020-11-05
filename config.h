@@ -1,0 +1,54 @@
+#include "stddef.h"
+//const char* RESCAN_CMD = "find /sys/ -name uevent -exec sh -c 'echo add > {}' \\;";
+const char* RESCAN_CMD[] = {"/bin/find", "/sys/", "-name", "uevent", "-exec", "sh", "-c", "echo add > {}", ";", NULL};
+const char* LOG_PATH = "/var/log/ndev.log";
+struct Rule {
+	const char *envVar;
+	const char *devRegex;
+	const char *user;
+	const char *group;
+	int mode;
+	const char *path;
+	const char *cmd;
+	const int noEndOnMatch;
+} rules[] = {
+    { NULL,       ".*",          NULL  , NULL ,   0000, "!",       "*echo $(env)", .noEndOnMatch=1},
+    // debugging
+	{ "DEVNAME", "null",         "root", "root",  0666, NULL,      NULL                           },
+	{ "DEVNAME", "zero",         "root", "root",  0666, NULL,      NULL                           },
+	{ "DEVNAME", "full",         "root", "root",  0666, NULL,      NULL                           },
+	{ "DEVNAME", "random",       "root", "root",  0666, NULL,      NULL                           },
+	{ "DEVNAME", "urandom",      "root", "root",  0444, NULL,      NULL                           },
+	{ "DEVNAME", "hwrandom",     "root", "root",  0660, NULL,      NULL                           },
+	{ "DEVNAME", "mem",          "root", "root",  0640, NULL,      NULL                           },
+	{ "DEVNAME", "kmem",         "root", "root",  0640, NULL,      NULL                           },
+	{ "DEVNAME", "port",         "root", "root",  0640, NULL,      NULL                           },
+	{ "DEVNAME", "console",      "root", "tty",   0600, NULL,      NULL                           },
+	{ "DEVNAME", "ptmx",         "root", "tty",   0666, NULL,      NULL                           },
+	{ "DEVNAME", "tty",          "root", "tty",   0666, NULL,      NULL                           },
+	{ "DEVNAME", "tty[0-9]",     "root", "tty",   0660, NULL,      NULL                           },
+	{ "DEVNAME", "tty[0-9][0-9]","root", "tty",   0660, NULL,      NULL                           },
+	{ "DEVNAME", "ttyS[0-9]*",   "root", "tty",   0660, NULL,      NULL,                          },
+	{ "DEVNAME", "pty.*",        "root", "tty",   0660, NULL,      NULL                           },
+    // load driver
+    { "MODALIAS", ".*",          NULL  , NULL ,   0000, "!",       "@modprobe -v -b $MODALIAS", .noEndOnMatch=1},
+    { "DEVTYPE", "partition",    NULL  , NULL ,   0000, "!",       "@modprobe -q $(lsblk -no FSTYPE $DEVNAME | grep -v linux_raid_member)", .noEndOnMatch=1},
+
+	{ "DEVNAME", "vcs[0-9]*",    "root", "tty",   0660, NULL,      NULL                           },
+	{ "DEVNAME", "vcsa*[0-9]*",  "root", "tty",   0660, NULL,      NULL                           },
+	{ "DEVNAME", "sd[a-z].*",    "root", "disk",  0660, NULL,      NULL                           },
+	{ "DEVNAME", "sr[0-9]*",     "root", "cdrom", 0660, NULL,      "@ln -sf $DEVNAME /dev/cdrom"  },
+	{ "DEVNAME", "ts[0-9]+",     "root", "root",  0640, "=input/", NULL                           },
+	{ "DEVNAME", "input/.*",     "root", "root",  0640, "=input/", NULL                           },
+	{ "DEVNAME", "dri/.*",       "root", "video", 0660, "=dri/",   NULL                           },
+	{ "DEVNAME", "snd/.*",       "root", "audio", 0660, "=snd/",   NULL                           },
+	{ "DEVNAME", "midi.*",       "root", "audio", 0660, "=snd/",   NULL                           },
+	{ "DEVNAME", "seq",          "root", "audio", 0660, "=snd/",   NULL                           },
+	{ "DEVNAME", "timer",        "root", "audio", 0660, "=snd/",   NULL                           },
+	{ "DEVNAME", "rtc[0-9]*",    "root", "root",  0664, NULL,      NULL                           },
+	{ "DEVNAME", "vbi[0-9]",     "root", "video", 0660, NULL,      NULL                           },
+	{ "DEVNAME", "video[0-9]",   "root", "video", 0660, NULL,      NULL                           },
+	{ "DEVNAME", "fuse",         "root", "root",  0666, NULL,      NULL                           },
+	{ "DEVNAME", ".*",           "root", "root",  0660, NULL,      NULL                           },
+};
+
