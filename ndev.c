@@ -14,6 +14,12 @@
 #include <unistd.h>
 
 #include "config.h"
+#ifdef DEBUG
+#define DEBUG(X...) printf(X)
+#else
+#define DEBUG(X...)
+#endif
+#define LOG(X...) printf(X)
 
 void runCmd(const char* cmd) {
     fflush(NULL);
@@ -52,12 +58,12 @@ void ownFile(struct Rule* rule, const char*path) {
     if(pw)
         uid=pw->pw_uid;
     else
-        printf("No such user %s\n", rule->user);
+        LOG("No such user %s\n", rule->user);
 	gr = getgrnam(rule->group);
     if(gr)
         gid=gr->gr_gid;
     else
-        printf("No such group %s\n", rule->group);
+        LOG("No such group %s\n", rule->group);
 
 	if (chown(path, uid, gid) < 0)
 		perror("Couldn't chown the device path");
@@ -67,7 +73,7 @@ void addDevice(struct Rule* rule, const char*path) {
     int type = devtype(major, minor);
 	if (mknod(path, rule->mode | type, makedev(atoi(major), atoi(minor))) < 0) {
        if(errno == EEXIST) {
-           printf("Device already exists; Updating permissions to %o\n", rule->mode);
+           LOG("Device already exists; Updating permissions to %o\n", rule->mode);
            if(chmod(path, rule->mode))
               perror("Could not change device mode");
        }
@@ -85,13 +91,13 @@ void createRemoveDevice(struct Rule* rule, int add) {
     else if(rule->path[strlen(rule->path)-1] == '/'){
         strcpy(path, rule->path+1);
         if(add)
-            mkdir(path, rule->mode);
+            mkdir(path, 755);
         strcat(path, getenv("DEVNAME"));
     }
     else
         strcpy(path, rule->path+1);
 
-    printf("%s device: %s\n", add?"Adding":"Removing", path);
+    LOG("%s device: %s\n", add?"Adding":"Removing", path);
     if(add)
         addDevice(rule, path);
     else
@@ -100,7 +106,7 @@ void createRemoveDevice(struct Rule* rule, int add) {
     if(rule->path && rule->path[0] == '<') {
         char linkPath[255]="/dev/";
         strcat(linkPath, getenv("DEVNAME"));
-        printf("%s link: %s", add?"Adding":"Removing", path);
+        LOG("%s link: %s", add?"Adding":"Removing", path);
         if(add)
             symlink(path, linkPath);
         else
@@ -138,20 +144,20 @@ int main(int argc, char *argv[]) {
             perror("Failed to open log file");
         }
         pipeToSysLogger();
-        printf("Received event ACTION: %s DEVNAME: %s \n", getenv("ACTION"), getenv("DEVNAME"));
+        DEBUG("Received event ACTION: %s DEVNAME: %s \n", getenv("ACTION"), getenv("DEVNAME"));
         if(!getenv("ACTION")) {
-            printf("Env isn't setup for hotplug\n");
+            LOG("Env isn't setup for hotplug\n");
             exit(1);
         }
         int add = strcmp(getenv("ACTION"), "add") == 0;
         for(int i=0; i < LEN(rules); i++){
             if(!rules[i].envVar || getenv(rules[i].envVar) && matches(rules[i].devRegex, getenv(rules[i].envVar))) {
-                printf("Rule %d matched: '%s' '%s' CMD: %s\n", i, rules[i].envVar, rules[i].devRegex, rules->cmd);
+                DEBUG("Rule %d matched: '%s' '%s' CMD: %s\n", i, rules[i].envVar, rules[i].devRegex, rules->cmd);
                 if(!rules[i].path || rules[i].path && rules[i].path[0] != '!')
                     createRemoveDevice(rules + i, add);
                 if(rules[i].cmd) {
                     if( rules[i].cmd[0] == '*' || rules[i].cmd[0] == '@' && add || rules[i].cmd[0] == '$' && !add ) {
-                        printf("Running cmd %s\n", &rules[i].cmd[1]);
+                        LOG("Running cmd %s\n", &rules[i].cmd[1]);
                         runCmd(&rules[i].cmd[1]);
                     }
                 }

@@ -12,8 +12,9 @@ struct Rule {
 	const char *cmd;
 	const int noEndOnMatch;
 } rules[] = {
+#ifdef DEBUG
     { NULL,       ".*",          NULL  , NULL ,   0000, "!",       "*echo $(env)", .noEndOnMatch=1},
-    // debugging
+#endif
 	{ "DEVNAME", "null",         "root", "root",  0666, NULL,      NULL                           },
 	{ "DEVNAME", "zero",         "root", "root",  0666, NULL,      NULL                           },
 	{ "DEVNAME", "full",         "root", "root",  0666, NULL,      NULL                           },
