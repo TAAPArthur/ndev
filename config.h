@@ -1,6 +1,6 @@
 #include "stddef.h"
 //const char* RESCAN_CMD = "find /sys/ -name uevent -exec sh -c 'echo add > {}' \\;";
-const char* RESCAN_CMD[] = {"/bin/find", "/sys/", "-name", "uevent", "-exec", "sh", "-c", "echo add > {}", ";", NULL};
+const char* RESCAN_CMD[] = {"/bin/find", "/sys/", "-name", "uevent", "-exec", "sh", "-c", "echo add > '{}'", ";", NULL};
 const char* LOG_PATH = "/var/log/ndev.log";
 struct Rule {
 	const char *envVar;
@@ -32,8 +32,8 @@ struct Rule {
 	{ "DEVNAME", "ttyS[0-9]*",   "root", "tty",   0660, NULL,      NULL,                          },
 	{ "DEVNAME", "pty.*",        "root", "tty",   0660, NULL,      NULL                           },
     // load driver
-    { "MODALIAS", ".*",          NULL  , NULL ,   0000, "!",       "@modprobe -v -b $MODALIAS", .noEndOnMatch=1},
-    { "DEVTYPE", "partition",    NULL  , NULL ,   0000, "!",       "@modprobe -q $(lsblk -no FSTYPE $DEVNAME | grep -v linux_raid_member)", .noEndOnMatch=1},
+    { "MODALIAS", ".+",          NULL  , NULL ,   0000, "!",       "@modprobe -v -b $MODALIAS", .noEndOnMatch=1},
+    { "DEVTYPE", "partition",    NULL  , NULL ,   0000, "!",       "@modprobe -q \"$(lsblk -no FSTYPE /dev/$DEVNAME | grep -v linux_raid_member)\"", .noEndOnMatch=1},
 
 	{ "DEVNAME", "vcs[0-9]*",    "root", "tty",   0660, NULL,      NULL                           },
 	{ "DEVNAME", "vcsa*[0-9]*",  "root", "tty",   0660, NULL,      NULL                           },
