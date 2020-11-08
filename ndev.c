@@ -1,4 +1,3 @@
-#define _DEFAULT_SOURCE
 #include <errno.h>
 #include <fcntl.h>
 #include <grp.h>
