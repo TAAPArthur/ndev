@@ -150,6 +150,10 @@ int main(int argc, char *argv[]) {
             exit(1);
         }
         int add = strcmp(getenv("ACTION"), "add") == 0;
+        int remove = strcmp(getenv("ACTION"), "remove") == 0;
+        if(!add && !remove) {
+            return 0;
+        }
         for(int i=0; i < LEN(rules); i++){
             if(!rules[i].envVar || getenv(rules[i].envVar) && matches(rules[i].devRegex, getenv(rules[i].envVar))) {
                 DEBUG("Rule %d matched: '%s' '%s' CMD: %s\n", i, rules[i].envVar, rules[i].devRegex, rules->cmd);
