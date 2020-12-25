@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
         }
         for(int i=0; i < LEN(rules); i++){
             if(!rules[i].envVar || getenv(rules[i].envVar) && matches(rules[i].devRegex, getenv(rules[i].envVar))) {
-                DEBUG("Rule %d matched: '%s' '%s' CMD: %s\n", i, rules[i].envVar, rules[i].devRegex, rules->cmd);
+                DEBUG("Rule %d matched: '%s' '%s' CMD: %s\n", i, rules[i].envVar, rules[i].devRegex, rules[i].cmd);
                 if(!rules[i].path || rules[i].path && rules[i].path[0] != '!')
                     createRemoveDevice(rules + i, add);
                 if(rules[i].cmd) {

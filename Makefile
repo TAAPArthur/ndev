@@ -1,5 +1,6 @@
 all: config.h ndev
 
+ndev.o: | config.h
 ndev: ndev.o
 	${CC} ${CFLAGS} $^ -o $@ ${LDFLAGS}
 
