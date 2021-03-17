@@ -26,9 +26,8 @@ struct Rule {
 	{ "DEVNAME", "console",      "root", "tty",   0600, NULL,      NULL                           },
 	{ "DEVNAME", "ptmx",         "root", "tty",   0666, NULL,      NULL                           },
 	{ "DEVNAME", "tty",          "root", "tty",   0666, NULL,      NULL                           },
-	{ "DEVNAME", "tty[0-9]",     "root", "tty",   0660, NULL,      NULL                           },
-	{ "DEVNAME", "tty[0-9][0-9]","root", "tty",   0660, NULL,      NULL                           },
-	{ "DEVNAME", "ttyS[0-9]*",   "root", "tty",   0660, NULL,      NULL,                          },
+	{ "DEVNAME", "tty[0-9]+",    "root", "tty",   0660, NULL,      NULL                           },
+	{ "DEVNAME", "tty.+",        "root", "tty",   0660, NULL,      NULL                           },
 	{ "DEVNAME", "pty.*",        "root", "tty",   0660, NULL,      NULL                           },
     // load driver
     { "MODALIAS", ".+",          NULL  , NULL ,   0000, "!",       "@modprobe -v -b $MODALIAS", .noEndOnMatch=1},
