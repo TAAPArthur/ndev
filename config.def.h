@@ -39,7 +39,7 @@ struct Rule {
     { "DEVNAME", "vcs[0-9]*",    "root", "tty",   0660, NULL,      NULL                           },
     { "DEVNAME", "vcsa*[0-9]*",  "root", "tty",   0660, NULL,      NULL                           },
     { "DEVNAME", "sd[a-z].*",    "root", "disk",  0660, NULL,      NULL                           },
-    { "DEVNAME", "sr[0-9]*",     "root", "cdrom", 0660, NULL,      "@ln -sf $DEVNAME /dev/cdrom"  },
+    { "DEVNAME", "sr[0-9]*",     "root", "disk",  0660, NULL,      "@ln -sf $DEVNAME /dev/cdrom"  },
     { "DEVNAME", "ts[0-9]+",     "root", "root",  0660, "=input/", NULL                           },
     { "DEVNAME", "input/.*",     "root", "input", 0660, NULL,      NULL                           },
     { "DEVNAME", "dri/.*",       "root", "video", 0660, NULL,      NULL                           },
