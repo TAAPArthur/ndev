@@ -31,9 +31,9 @@ struct Rule {
     { "DEVNAME", "pty.*",        "root", "tty",   0660, NULL,      NULL                           },
     // load driver
     { "MODALIAS", ".+",          NULL  , NULL ,   0000, "!",       "@modprobe -v -b $MODALIAS", .noEndOnMatch=1},
-    { "DEVTYPE", "partition",    NULL  , NULL ,   0000, "!",       "@modprobe -q \"$(lsblk -no FSTYPE /dev/$DEVNAME | grep -v linux_raid_member)\"", .noEndOnMatch=1},
+    { "DEVTYPE", "partition",    NULL  , NULL ,   0000, "!",       "@blkid /dev/$DEVNAME | grep -q TYPE && modprobe -q \"$(blkid /dev/$DEVNAME)\"", .noEndOnMatch=1},
     // libinput-zero uevent support
-    { "SUBSYSTEM", "(input|drm)", NULL  , NULL ,   0000, "!",      "*env > /tmp/.libudev-zero/uevent.$$", .noEndOnMatch=1},
+    { "SUBSYSTEM", "(input|drm)", NULL  , NULL ,  0000, "!",       "*env > /tmp/.libudev-zero/uevent.$$", .noEndOnMatch=1},
     // auto power on devices
     { "DEVNAME", ".*power",      "root", "root",  0660, NULL,      "@printf 1 > /sys/$DEVPATH/device/powered"},
     { "DEVNAME", "vcs[0-9]*",    "root", "tty",   0660, NULL,      NULL                           },
