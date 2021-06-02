@@ -1,3 +1,14 @@
+ifdef DEBUG
+	VERBOSE=1
+	ENV_DUMP=1
+endif
+ifdef VERBOSE
+	CFLAGS += -DVERBOSE
+endif
+ifdef ENV_DUMP
+	CFLAGS += -DENV_DUMP
+endif
+
 all: config.h ndev
 
 ndev.o: config.h

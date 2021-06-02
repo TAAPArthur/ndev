@@ -13,7 +13,8 @@
 #include <unistd.h>
 
 #include "config.h"
-#ifdef DEBUG
+
+#ifdef VERBOSE
 #define DEBUG(X...) printf(X)
 #else
 #define DEBUG(X...)
