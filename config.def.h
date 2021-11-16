@@ -40,6 +40,8 @@ struct Rule {
     { "DEVNAME", ".*power",      "root", "root",  0660, NULL,      "@printf 1 > /sys/$DEVPATH/device/powered"},
     { "DEVNAME", "vcs[0-9]*",    "root", "tty",   0660, NULL,      NULL                           },
     { "DEVNAME", "vcsa*[0-9]*",  "root", "tty",   0660, NULL,      NULL                           },
+    { "DEVNAME", "mmcblk[0-9].*","root", "disk",  0660, NULL,      NULL                           },
+    { "DEVNAME", "nvme[0-9].*",  "root", "disk",  0660, NULL,      NULL                           },
     { "DEVNAME", "sd[a-z].*",    "root", "disk",  0660, NULL,      NULL                           },
     { "DEVNAME", "sr[0-9]*",     "root", "disk",  0660, NULL,      "@ln -sf $DEVNAME /dev/cdrom"  },
     { "DEVNAME", "ts[0-9]+",     "root", "root",  0660, "=input/", NULL                           },
