@@ -19,7 +19,7 @@ config.h:
 	cp config.def.h $@
 
 install: ndev
-	install -D -t $(DESTDIR)/bin ndev
+	install -D -t $(DESTDIR)/usr/bin ndev
 
 clean:
 	rm -f ndev *.o
