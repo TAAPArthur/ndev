@@ -121,8 +121,7 @@ void pipeToSysLogger() {
         dup2(fds[0], STDIN_FILENO);
         close(fds[0]);
         close(fds[1]);
-        const char* args[]= {"/bin/logger", "-i", "-s", "-t", "ndev", NULL};
-        execv(args[0], (char* const*)args);
+        execv(*LOGGER_CMD, LOGGER_CMD);
         perror("Failed to exec");
         exit(1);
     }

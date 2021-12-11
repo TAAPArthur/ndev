@@ -1,5 +1,6 @@
 #include "stddef.h"
 const char* RESCAN_CMD[] = {"/bin/find", "/sys/", "-name", "uevent", "-exec", "sh", "-c", "echo add > \"$1\"", "_", "{}", ";", NULL};
+char* LOGGER_CMD[] = {"/bin/logger", "-i", "-s", "-t", "ndev", NULL};
 const char* LOG_PATH = "/var/log/ndev.log";
 struct Rule {
     const char *envVar;
