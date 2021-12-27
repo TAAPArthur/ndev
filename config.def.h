@@ -48,7 +48,7 @@ struct Rule {
     { "DEVNAME", "sd[a-z].*",    "root", "disk",  0660, NULL,      NULL                           },
     { "DEVNAME", "sr[0-9]*",     "root", "disk",  0660, NULL,      "@ln -sf $DEVNAME /dev/cdrom"  },
     { "DEVNAME", "ts[0-9]+",     "root", "root",  0660, "=input/", NULL                           },
-    { "DEVNAME", "input/.*",     "root", "input", 0660, NULL,      NULL                           },
+    { "DEVNAME", "input/.*",     "root", "input", 0660, NULL,      "@remapkeys /dev/$DEVNAME"     },
     { "DEVNAME", "dri/.*",       "root", "video", 0660, NULL,      NULL                           },
     { "DEVNAME", "snd/.*",       "root", "audio", 0660, NULL,      NULL                           },
     { "DEVNAME", "midi.*",       "root", "audio", 0660, "=snd/",   NULL                           },
