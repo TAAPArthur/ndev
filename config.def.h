@@ -14,6 +14,7 @@ struct Rule {
 } rules[] = {
 #ifdef ENV_DUMP
     { NULL,       ".*",          NULL  , NULL ,   0000, "!",       "*echo $(env)", .noEndOnMatch=1},
+    { NULL,       ".*",          NULL  , NULL ,   0000, "!",       "#echo $(env)", .noEndOnMatch=1},
 #endif
     { "DEVNAME", "null",         "root", "root",  0666, NULL,      NULL                           },
     { "DEVNAME", "zero",         "root", "root",  0666, NULL,      NULL                           },

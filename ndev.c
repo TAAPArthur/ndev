@@ -150,16 +150,18 @@ int main(int argc, char *argv[]) {
         }
         int add = strcmp(getenv("ACTION"), "add") == 0;
         int remove = strcmp(getenv("ACTION"), "remove") == 0;
-        if(!add && !remove) {
+        int change = strcmp(getenv("ACTION"), "change") == 0;
+        if(!add && !remove && !change) {
+            LOG("unknown action %s", getenv("ACTION"));
             return 0;
         }
         for(int i=0; i < LEN(rules); i++){
             if(!rules[i].envVar || getenv(rules[i].envVar) && matches(rules[i].devRegex, getenv(rules[i].envVar))) {
                 DEBUG("Rule %d matched: '%s' '%s' CMD: %s\n", i, rules[i].envVar, rules[i].devRegex, rules[i].cmd);
-                if(!rules[i].path || rules[i].path && rules[i].path[0] != '!')
+                if(!change && (!rules[i].path || rules[i].path && rules[i].path[0] != '!'))
                     createRemoveDevice(rules + i, add);
                 if(rules[i].cmd) {
-                    if( rules[i].cmd[0] == '*' || rules[i].cmd[0] == '@' && add || rules[i].cmd[0] == '$' && !add ) {
+                    if( rules[i].cmd[0] == '*' && (add || remove) || rules[i].cmd[0] == '@' && add || rules[i].cmd[0] == '$' && remove || rules[i].cmd[0] == '#' && change) {
                         LOG("Running cmd %s\n", &rules[i].cmd[1]);
                         runCmd(&rules[i].cmd[1]);
                     }
