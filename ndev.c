@@ -41,7 +41,7 @@ int devtype(const char* major, const char *minor) {
 		return S_IFCHR;
 	return -1;
 }
-void ownFile(struct Rule* rule, const char*path) {
+void ownFile(const struct Rule* rule, const char*path) {
 	struct passwd *pw;
 	struct group *gr;
 	pw = getpwnam(rule->user);
@@ -59,7 +59,7 @@ void ownFile(struct Rule* rule, const char*path) {
 	if (chown(path, uid, gid) < 0)
 		perror("Couldn't chown the device path");
 }
-void addDevice(struct Rule* rule, const char*path) {
+void addDevice(const struct Rule* rule, const char*path) {
     const char* major=getenv("MAJOR"), *minor = getenv("MINOR");
     int type = devtype(major, minor);
 	if (mknod(path, rule->mode | type, makedev(atoi(major), atoi(minor))) < 0) {
@@ -75,7 +75,7 @@ void addDevice(struct Rule* rule, const char*path) {
     ownFile(rule, path);
 }
 
-void createRemoveDevice(struct Rule* rule, int add) {
+void createRemoveDevice(const struct Rule* rule, int add) {
     char path[1024]="/dev/";
     if(!rule->path)
         strcat(path, getenv("DEVNAME"));
@@ -122,11 +122,11 @@ void pipeToSysLogger() {
 
 int main(int argc, char *argv[]) {
     if (argc > 1 && argv[1][0] == '-' && argv[1][1] == 's')
-        execv(RESCAN_CMD[0], (char* const*)RESCAN_CMD);
+        execv(RESCAN_CMD[0], RESCAN_CMD);
     else {
 
         int fd = open(LOG_PATH, O_WRONLY | O_CREAT | O_APPEND | O_CLOEXEC, 644);
-        if(fd >=0) {
+        if(fd != -1) {
             if(dup2(fd, STDOUT_FILENO) == -1 || dup2(fd, STDERR_FILENO) == -1 ){
                 perror("Failed to dup fd");
             }
