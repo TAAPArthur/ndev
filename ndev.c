@@ -21,15 +21,6 @@
 #endif
 #define LOG(X...) printf(X)
 
-void runCmd(const char* cmd) {
-    fflush(NULL);
-    if(!fork()) {
-        const char* const args[] = {"/bin/sh", "-c", cmd, NULL};
-        execv(args[0], (char* const*)args);
-    }
-    wait(NULL);
-}
-
 #define LEN(A) sizeof(A)/sizeof(A[0])
 int matches(const char*devRegex, const char* str) {
     regex_t regex;
@@ -163,7 +154,7 @@ int main(int argc, char *argv[]) {
                 if(rules[i].cmd) {
                     if( rules[i].cmd[0] == '*' && (add || remove) || rules[i].cmd[0] == '@' && add || rules[i].cmd[0] == '$' && remove || rules[i].cmd[0] == '#' && change) {
                         LOG("Running cmd %s\n", &rules[i].cmd[1]);
-                        runCmd(&rules[i].cmd[1]);
+                        system(&rules[i].cmd[1]);
                     }
                 }
                 if(!rules[i].noEndOnMatch)
