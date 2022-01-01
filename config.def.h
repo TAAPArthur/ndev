@@ -34,6 +34,7 @@ static const struct Rule {
     { "DEVNAME", "hwrandom",     "root", "root",  0660, NULL,      NULL                           },
     { "DEVNAME", "input/.*",     "root", "input", 0660, NULL,      "@remapkeys /dev/$DEVNAME"     },
     { "DEVNAME", "kmem",         "root", "root",  0640, NULL,      NULL                           },
+    { "DEVNAME", "media[0-9]",   "root", "video", 0660, NULL,      NULL                           },
     { "DEVNAME", "mem",          "root", "root",  0640, NULL,      NULL                           },
     { "DEVNAME", "midi.*",       "root", "audio", 0660, "=snd/",   NULL                           },
     { "DEVNAME", "mmcblk[0-9].*","root", "disk",  0660, NULL,      NULL                           },
