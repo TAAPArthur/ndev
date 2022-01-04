@@ -20,7 +20,7 @@ static const struct Rule {
     { "MODALIAS", ".+",          NULL  , NULL ,   0000, "!",       "@modprobe -v -b $MODALIAS", .noEndOnMatch=1},
     { "DEVTYPE", "partition",    NULL  , NULL ,   0000, "!",       "@blkid /dev/$DEVNAME | grep -q TYPE && modprobe -q \"$(blkid /dev/$DEVNAME)\"", .noEndOnMatch=1},
     // libinput-zero uevent support
-    { "SUBSYSTEM", "(input|drm)", NULL , NULL ,  0000,  "!",       "*env > /tmp/.libudev-zero/uevent.$$", .noEndOnMatch=1},
+    { "SUBSYSTEM", "(input|drm)", NULL , NULL ,  0000,  "!",       "*libudev-zero-helper", .noEndOnMatch=1},
     // change ownership of specified led in /sys/class/leds
     { "SUBSYSTEM", "leds",        NULL , NULL,   0000,  "!",        "@chmod g+w /sys/$DEVPATH/brightness /sys/$DEVPATH/trigger; chown :sys /sys/$DEVPATH/brightness /sys/$DEVPATH/trigger"},
     { "SUBSYSTEM", "backlight",   NULL , NULL,   0000,  "!",        "@chmod g+w /sys/$DEVPATH/brightness; chown :sys /sys/$DEVPATH/brightness"},
