@@ -29,6 +29,7 @@ static const struct Rule {
     // Standard permission changes and linking
     { "DEVNAME", "console",      "root", "tty",   0600, NULL,      NULL                           },
     { "DEVNAME", "dri/.*",       "root", "video", 0660, NULL,      NULL                           },
+    { "DEVNAME", "fb[0-9]",      "root", "input", 0660, NULL,      NULL                           },
     { "DEVNAME", "full",         "root", "root",  0666, NULL,      NULL                           },
     { "DEVNAME", "fuse",         "root", "root",  0666, NULL,      NULL                           },
     { "DEVNAME", "hwrandom",     "root", "root",  0660, NULL,      NULL                           },
@@ -55,6 +56,7 @@ static const struct Rule {
     { "DEVNAME", "tty",          "root", "tty",   0666, NULL,      NULL                           },
     { "DEVNAME", "tty.+",        "root", "tty",   0660, NULL,      NULL                           },
     { "DEVNAME", "tty[0-9]+",    "root", "tty",   0660, NULL,      NULL                           },
+    { "DEVNAME", "uinput",       "root", "input", 0660, NULL,      NULL                           },
     { "DEVNAME", "urandom",      "root", "root",  0444, NULL,      NULL                           },
     { "DEVNAME", "vbi[0-9]",     "root", "video", 0660, NULL,      NULL                           },
     { "DEVNAME", "vcs[0-9]*",    "root", "tty",   0660, NULL,      NULL                           },
