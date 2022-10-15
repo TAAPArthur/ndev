@@ -29,7 +29,7 @@ static const struct Rule {
     // Standard permission changes and linking
     { "DEVNAME", "console",      "root", "tty",   0600, NULL,      NULL                           },
     { "DEVNAME", "dri/.*",       "root", "video", 0660, NULL,      NULL                           },
-    { "DEVNAME", "fd[0-9]",      "root", "input", 0660, NULL,      NULL                           },
+    { "DEVNAME", "fb[0-9]",      "root", "input", 0660, NULL,      NULL                           },
     { "DEVNAME", "full",         "root", "root",  0666, NULL,      NULL                           },
     { "DEVNAME", "fuse",         "root", "root",  0666, NULL,      NULL                           },
     { "DEVNAME", "hwrandom",     "root", "root",  0660, NULL,      NULL                           },
