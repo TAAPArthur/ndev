@@ -45,6 +45,7 @@ static const struct Rule {
     { "DEVNAME", "ptmx",         "root", "tty",   0666, NULL,      NULL                           },
     { "DEVNAME", "pty.*",        "root", "tty",   0660, NULL,      NULL                           },
     { "DEVNAME", "random",       "root", "root",  0666, NULL,      NULL                           },
+    { "DEVNAME", "rfkill",       "root", "sys",   0666, NULL,      NULL                           },
     { "DEVNAME", "rtc0",         "root", "sys",   0664, NULL,      "@ln -sf $DEVNAME /dev/rtc"    },
     { "DEVNAME", "rtc[0-9]*",    "root", "sys",   0664, NULL,      NULL                           },
     { "DEVNAME", "sd[a-z].*",    "root", "disk",  0660, NULL,      NULL                           },
