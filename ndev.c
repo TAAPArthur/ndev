@@ -32,32 +32,32 @@ int matches(const char*devRegex, const char* str) {
     return ret != REG_NOMATCH && match.rm_so == 0 && match.rm_eo == strlen(str);
 }
 int devtype(const char* major, const char *minor) {
-	char path[255];
-	snprintf(path, sizeof(path), "/sys/dev/block/%s:%s", major, minor);
-	if (!access(path, F_OK))
-		return S_IFBLK;
-	snprintf(path, sizeof(path), "/sys/dev/char/%s:%s", major, minor);
-	if (!access(path, F_OK))
-		return S_IFCHR;
-	return -1;
+    char path[255];
+    snprintf(path, sizeof(path), "/sys/dev/block/%s:%s", major, minor);
+    if (!access(path, F_OK))
+        return S_IFBLK;
+    snprintf(path, sizeof(path), "/sys/dev/char/%s:%s", major, minor);
+    if (!access(path, F_OK))
+        return S_IFCHR;
+    return -1;
 }
 void ownFile(const struct Rule* rule, const char*path) {
-	struct passwd *pw;
-	struct group *gr;
-	pw = getpwnam(rule->user);
+    struct passwd *pw;
+    struct group *gr;
+    pw = getpwnam(rule->user);
     int uid=-1, gid=-1;
     if(pw)
         uid=pw->pw_uid;
     else
         LOG("No such user %s\n", rule->user);
-	gr = getgrnam(rule->group);
+    gr = getgrnam(rule->group);
     if(gr)
         gid=gr->gr_gid;
     else
         LOG("No such group %s\n", rule->group);
 
-	if (chown(path, uid, gid) < 0)
-		perror("Couldn't chown the device path");
+    if (chown(path, uid, gid) < 0)
+        perror("Couldn't chown the device path");
 }
 void addDevice(const struct Rule* rule, const char*path) {
     const char* major=getenv("MAJOR"), *minor = getenv("MINOR");
