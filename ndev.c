@@ -62,14 +62,18 @@ void ownFile(const struct Rule* rule, const char*path) {
 void addDevice(const struct Rule* rule, const char*path) {
     const char* major=getenv("MAJOR"), *minor = getenv("MINOR");
     int type = devtype(major, minor);
-	if (mknod(path, rule->mode | type, makedev(atoi(major), atoi(minor))) < 0) {
+    if (type == -1) {
+        perror("Failed to find device");
+        return;
+    }
+    if (mknod(path, rule->mode | type, makedev(atoi(major), atoi(minor))) < 0) {
        if(errno == EEXIST) {
            LOG("Device already exists; Updating permissions to %o\n", rule->mode);
            if(chmod(path, rule->mode))
               perror("Could not change device mode");
-       }
-       else {
+       } else {
           perror("Could not create device");
+          return;
        }
     }
     ownFile(rule, path);
@@ -77,13 +81,18 @@ void addDevice(const struct Rule* rule, const char*path) {
 
 void createRemoveDevice(const struct Rule* rule, int add) {
     char path[1024]="/dev/";
+    const char* devname = getenv("DEVNAME");
+    if(!devname) {
+        LOG("Could not %s device because devname is null\n", add ? "add" : "remove", devname);
+        return;
+    }
     if(!rule->path)
-        strcat(path, getenv("DEVNAME"));
+        strcat(path, devname);
     else if(rule->path[strlen(rule->path)-1] == '/'){
         strcpy(path, rule->path+1);
         if(add)
             mkdir(path, 755);
-        strcat(path, getenv("DEVNAME"));
+        strcat(path, devname);
     }
     else
         strcpy(path, rule->path+1);
