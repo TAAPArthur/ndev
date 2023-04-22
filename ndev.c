@@ -148,22 +148,29 @@ int main(int argc, char *argv[]) {
             LOG("Env isn't setup for hotplug\n");
             exit(1);
         }
-        int add = strcmp(getenv("ACTION"), "add") == 0;
-        int remove = strcmp(getenv("ACTION"), "remove") == 0;
-        int change = strcmp(getenv("ACTION"), "change") == 0;
-        if(!add && !remove && !change) {
-            LOG("unknown action %s", getenv("ACTION"));
+        char * action = getenv("ACTION");
+        ActionType* actionType = NULL;
+        for(int i=0; i < LEN(actionTypes); i++){
+            if(strcmp(action, actionTypes[i].action) == 0) {
+                actionType = &actionTypes[i];
+            }
+        }
+        if(!actionType) {
+            LOG("unknown action %s", action);
             return 0;
         }
         for(int i=0; i < LEN(rules); i++){
             if(!rules[i].envVar || getenv(rules[i].envVar) && matches(rules[i].devRegex, getenv(rules[i].envVar))) {
                 DEBUG("Rule %d matched: '%s' '%s' CMD: %s\n", i, rules[i].envVar, rules[i].devRegex, rules[i].cmd);
-                if(!change && (!rules[i].path || rules[i].path && rules[i].path[0] != '!'))
-                    createRemoveDevice(rules + i, add);
+                if(actionType->pathRule && (!rules[i].path || rules[i].path && rules[i].path[0] != '!'))
+                    createRemoveDevice(rules + i, actionType->pathRule == CREATE_DEV);
                 if(rules[i].cmd) {
-                    if( rules[i].cmd[0] == '*' && (add || remove) || rules[i].cmd[0] == '@' && add || rules[i].cmd[0] == '$' && remove || rules[i].cmd[0] == '#' && change) {
-                        LOG("Running cmd %s\n", &rules[i].cmd[1]);
-                        system(&rules[i].cmd[1]);
+                    for(int n=0; n < LEN(actionType->prefixes) && actionType->prefixes[n]; n++){
+                        if(actionType->prefixes[n] == rules[i].cmd[0]) {
+                            LOG("Running cmd %s\n", &rules[i].cmd[1]);
+                            system(&rules[i].cmd[1]);
+                            break;
+                        }
                     }
                 }
                 if(!rules[i].noEndOnMatch)

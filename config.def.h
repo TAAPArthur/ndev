@@ -2,6 +2,27 @@
 static char* RESCAN_CMD[] = {"/bin/find", "/sys/", "-name", "uevent", "-exec", "sh", "-c", "echo add > \"$1\"", "_", "{}", ";", NULL};
 static char* LOGGER_CMD[] = {"/bin/logger", "-i", "-s", "-t", "ndev", NULL};
 static const char* LOG_PATH = "/var/log/ndev.log";
+
+typedef enum {
+    CREATE_DEV = 1,
+    REMOVE_DEV = 2,
+} PathRule;
+typedef struct {
+    const char* action;
+    char prefixes[4];
+    PathRule pathRule;
+} ActionType;
+
+static ActionType actionTypes[] =  {
+    // from mdev
+    {"add",    {'@', '*'}, CREATE_DEV},
+    {"remove", {'$', '*'}, REMOVE_DEV},
+    // New
+    {"change", {'#'}},
+    {"bind",   {'!'}},
+    {"unbind", {'%'}},
+};
+
 static const struct Rule {
     const char *envVar;
     const char *devRegex;
