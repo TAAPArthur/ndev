@@ -54,6 +54,7 @@ static const struct Rule {
     { "DEVNAME", "fb[0-9]",      "root", "input", 0660, NULL,      NULL                           },
     { "DEVNAME", "full",         "root", "root",  0666, NULL,      NULL                           },
     { "DEVNAME", "fuse",         "root", "root",  0666, NULL,      NULL                           },
+    { "DEVNAME", "hidraw[0-9]+", "root", "input", 0660, NULL,      NULL                           },
     { "DEVNAME", "hwrandom",     "root", "root",  0660, NULL,      NULL                           },
     { "DEVNAME", "input/.*",     "root", "input", 0660, NULL,      "@remapkeys /dev/$DEVNAME"     },
     { "DEVNAME", "kmem",         "root", "root",  0640, NULL,      NULL                           },
